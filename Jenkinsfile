@@ -1,5 +1,5 @@
 node {
-   def registryProjet='registry.gitlab.com/jmarcus75/presentations-jenkins/wartest'
+   def registryProjet='registry.gitlab.com/jmarcus75/presentations-jenkins20/wartest'
    def IMAGE="${registryProjet}:version-${env.BUILD_ID}"
     stage('Build - Clone') {
           git 'https://github.com/jmarcus75/war-build-docker.git'
