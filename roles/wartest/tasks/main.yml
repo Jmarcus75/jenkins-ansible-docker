@@ -1,22 +1,17 @@
----
-- name: Ensure Python3 and pip3 are installed
+- name: install pip
   apt:
-    name:
-      - python3
-      - python3-pip
+    name: python-pip
     state: present
-    update_cache: yes
 
-- name: Ensure Docker SDK for Python is installed
+- name: pip install docker-py
   pip:
-    name: docker
-    executable: pip3
+    name:
+      - docker
+      - docker-compose
 
-- name: Pull Docker image
+- name: run container
   docker_container:
     name: wartest
-    image: "{{ image }}"
+    image: "{{ image }}"
+    ports: 8081:8080
     state: started
-    restart_policy: always
-    published_ports:
-      - "8080:8080"
