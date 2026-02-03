@@ -1,16 +1,11 @@
 node {
-<<<<<<< HEAD
-   def registryProjet='registry.gitlab.com/jmarcus75/presentations-jenkins20/wartest'
-   def IMAGE="${registryProjet}:version-${env.BUILD_ID}"
-=======
     // Variables
-    def registryProjet = 'registry.gitlab.com/xavki/presentations-jenkins/wartest'
+    def registryProjet = 'registry.gitlab.com/jmarcus75/presentations-jenkins20/wartest'
     def IMAGE = "${registryProjet}:version-${env.BUILD_ID}"
 
     // Stage 1: Cloner le projet Maven
->>>>>>> 9816db8171d6bddd814944ff36ea1fe1ab2cb170
     stage('Build - Clone') {
-        git 'https://github.com/priximmo/war-build-docker.git'
+        git 'https://github.com/jmarcus75/war-build-docker.git'
     }
 
     // Stage 2: Maven package
@@ -20,14 +15,14 @@ node {
 
     // Stage 3: Build Docker image
     def img = docker.build("$IMAGE", '.')
-    
+
     // Stage 4: Test de l'image Docker
     stage('Build - Test') {
         img.withRun("--name run-${env.BUILD_ID} -p 8081:8080") { c ->
             sh 'docker ps'
-            sh 'netstat -ntaup || true'   // Permet d'éviter une erreur si netstat est limité
-            sh 'sleep 10s'                // Laisser Tomcat démarrer
-            sh 'curl -f http://127.0.0.1:8081'  // Vérifie que l'application répond
+            sh 'netstat -ntaup || true'   // évite erreur si netstat limité
+            sh 'sleep 10s'                // laisser Tomcat démarrer
+            sh 'curl -f http://127.0.0.1:8081'  // vérifie que l'application répond
             sh 'docker ps'
         }
     }
@@ -42,7 +37,7 @@ node {
 
     // Stage 6: Cloner le repo Ansible pour le déploiement
     stage('Deploy - Clone') {
-        git 'https://github.com/priximmo/jenkins-ansible-docker.git'
+        git 'https://github.com/jmarcus75/jenkins-ansible-docker.git'
     }
 
     // Stage 7: Déploiement avec Ansible sur la VM cible
@@ -51,7 +46,7 @@ node {
             colorized: true,
             become: true,
             playbook: 'playbook.yml',
-            inventory: "${env.HOST},",      // <-- prend la valeur du paramètre Jenkins
+            inventory: "${env.HOST},",      // prend la valeur du paramètre Jenkins
             extras: "--extra-vars 'image=$IMAGE'"
         )
     }
