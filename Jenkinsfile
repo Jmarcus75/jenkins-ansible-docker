@@ -20,18 +20,18 @@ node {
     stage('Build - Test') {
         img.withRun("--name run-${env.BUILD_ID} -p 8081:8080") { c ->
             sh 'docker ps'
-            sh 'netstat -ntaup || true'   // évite erreur si netstat limité
-            sh 'sleep 10s'                // laisser Tomcat démarrer
-            sh 'curl -f http://127.0.0.1:8081'  // vérifie que l'application répond
+            sh 'netstat -ntaup || true'        // Evite erreur si netstat est limité
+            sh 'sleep 10s'                     // Laisser Tomcat démarrer
+            sh 'curl -f http://127.0.0.1:8081' // Vérifie que l'application répond
             sh 'docker ps'
         }
     }
 
-    // Stage 5: Push Docker image sur GitLab
+    // Stage 5: Push Docker image sur GitLab Registry
     stage('Build - Push') {
         docker.withRegistry('https://registry.gitlab.com', 'reg1') {
-            img.push('latest')  // push latest
-            img.push()          // push version spécifique
+            img.push('latest') // push latest
+            img.push()         // push version spécifique
         }
     }
 
@@ -46,8 +46,8 @@ node {
             colorized: true,
             become: true,
             playbook: 'playbook.yml',
-            inventory: "${env.HOST},",      // prend la valeur du paramètre Jenkins
-            extras: "--extra-vars 'image=$IMAGE'"
+            inventory: "${env.HOST},",                  // Utilise le paramètre Jenkins HOST
+            extras: "--extra-vars 'image=$IMAGE'"       // Passee le tag Docker au playbook
         )
     }
 }
