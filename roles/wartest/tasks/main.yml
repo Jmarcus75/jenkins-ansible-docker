@@ -15,4 +15,3 @@
     image: "{{ image }}"
     ports: 8081:8080
     state: started
- 

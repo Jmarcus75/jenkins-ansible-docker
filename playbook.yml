@@ -4,5 +4,3 @@
   become: yes
   roles:
     - wartest
-
-
